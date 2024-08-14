@@ -30,6 +30,6 @@ PROTO_NAMES=(
 )
 
 for name in "${PROTO_NAMES[@]}"; do
-  protoc --go_out=plugins=grpc:./${name} --go_opt=module=github.com/openimsdk/protocol/${name} ${name}/${name}.proto
+  protoc --go_out=plugins=grpc:./${name} --go_opt=module=github.com/zilinyo/protocol/${name} ${name}/${name}.proto
 done
 

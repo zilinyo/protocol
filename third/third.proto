@@ -15,7 +15,7 @@
 syntax = "proto3";
 package openim.third;
 import "sdkws/sdkws.proto";
-option go_package = "github.com/openimsdk/protocol/third";
+option go_package = "github.com/zilinyo/protocol/third";
 
 message KeyValues {
   string key = 1;
