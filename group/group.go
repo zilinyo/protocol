@@ -16,15 +16,13 @@ package group
 
 import (
 	"errors"
-	"fmt"
-
-	"github.com/zilinyo/protocol/constant"
+	"github.com/openimsdk/protocol/constant"
 )
 
 func (x *CreateGroupReq) Check() error {
-	//if x.MemberUserIDs == nil && x.AdminUserIDs == nil {
-	//	return errors.New("memberUserIDS and adminUserIDs are empty")
-	//}
+	if x.MemberUserIDs == nil && x.AdminUserIDs == nil {
+		return errors.New("memberUserIDS and adminUserIDs are empty")
+	}
 	if x.GroupInfo == nil {
 		return errors.New("groupInfo is empty")
 	}
@@ -32,10 +30,7 @@ func (x *CreateGroupReq) Check() error {
 		return errors.New("GroupType is invalid")
 	}
 	if x.OwnerUserID == "" {
-		return errors.New("ownerUserID is empty")
-	}
-	if len(x.MemberUserIDs) > constant.ParamMaxLength {
-		return errors.New("too many MemberUserIDs, need to be less than 1000")
+		return errors.New("ownerUserID")
 	}
 	return nil
 }
@@ -161,13 +156,8 @@ func (x *KickGroupMemberReq) Check() error {
 	if x.GroupID == "" {
 		return errors.New("groupID is empty")
 	}
-
 	if x.KickedUserIDs == nil {
 		return errors.New("kickUserIDs is empty")
-	}
-
-	if len(x.KickedUserIDs) > constant.ParamMaxLength {
-		return errors.New("too many KickedUserIDs, need to be less than 1000")
 	}
 	return nil
 }
@@ -189,15 +179,9 @@ func (x *InviteUserToGroupReq) Check() error {
 	if x.GroupID == "" {
 		return errors.New("groupID is empty")
 	}
-
 	if x.InvitedUserIDs == nil {
 		return errors.New("invitedUserIDs is empty")
 	}
-
-	if len(x.InvitedUserIDs) > constant.ParamMaxLength {
-		return errors.New("too many InvitedUserIDs, need to be less than 1000")
-	}
-
 	return nil
 }
 
@@ -300,11 +284,7 @@ func (x *SetGroupMemberInfo) Check() error {
 
 func (x *SetGroupMemberInfoReq) Check() error {
 	if x.Members == nil {
-		return errors.New("members is empty")
-	}
-
-	if len(x.Members) > constant.ParamMaxLength {
-		return errors.New("too many Members, need to be less than 1000")
+		return errors.New("Members is empty")
 	}
 	return nil
 }
@@ -312,10 +292,6 @@ func (x *SetGroupMemberInfoReq) Check() error {
 func (x *GetGroupAbstractInfoReq) Check() error {
 	if x.GroupIDs == nil {
 		return errors.New("GroupID is empty")
-	}
-
-	if len(x.GroupIDs) > constant.ParamMaxLength {
-		return errors.New("too many GroupIDs, need to be less than 1000")
 	}
 	return nil
 }
@@ -326,10 +302,6 @@ func (x *GetUserInGroupMembersReq) Check() error {
 	}
 	if x.UserID == "" {
 		return errors.New("userID is empty")
-	}
-
-	if len(x.GroupIDs) > constant.ParamMaxLength {
-		return errors.New("too many GroupIDs, need to be less than 1000")
 	}
 	return nil
 }
@@ -374,10 +346,6 @@ func (x *GetGroupUsersReqApplicationListReq) Check() error {
 	if x.UserIDs == nil {
 		return errors.New("UserID is empty")
 	}
-
-	if len(x.UserIDs) > constant.ParamMaxLength {
-		return errors.New("too many UserIDs, need to be less than 1000")
-	}
 	return nil
 }
 func (x *GroupCreateCountReq) Check() error {
@@ -389,56 +357,22 @@ func (x *GroupCreateCountReq) Check() error {
 	}
 	return nil
 }
-func (x *GetFullGroupMemberUserIDsReq) Check() error {
-	if len(x.GroupID) == 0 {
+
+func (x *SearchGroupMemberReq) Check() error {
+	if x.GroupID == "" {
 		return errors.New("groupID is empty")
 	}
-	return nil
-}
-func (x *GetFullJoinGroupIDsReq) Check() error {
-	if len(x.UserID) == 0 {
-		return errors.New("userID is empty")
+	if x.Keyword == "" {
+		return errors.New("keyword is empty")
+	}
+	switch x.Position {
+	case constant.GroupSearchPositionHead:
+	case constant.GroupSearchPositionAny:
+	default:
+		return errors.New("position is invalid")
+	}
+	if err := x.Pagination.Check(); err != nil {
+		return err
 	}
 	return nil
-}
-
-func (x *BatchGetIncrementalGroupMemberResp) Format() any {
-	if len(x.RespList) > 50 {
-		return fmt.Sprintf("len is %v", len(x.RespList))
-	}
-	return x
-}
-
-func (x *GetGroupApplicationListResp) Format() any {
-	if len(x.GroupRequests) > 50 {
-		return fmt.Sprintf("len is %v", len(x.GroupRequests))
-	}
-	return x
-}
-func (x *GetJoinedGroupListResp) Format() any {
-	if len(x.Groups) > 20 {
-		return fmt.Sprintf("len is %v", len(x.Groups))
-	}
-	return x
-}
-
-func (x *GetGroupsInfoResp) Format() any {
-	if len(x.GroupInfos) > 20 {
-		return fmt.Sprintf("len is %v", len(x.GroupInfos))
-	}
-	return x
-}
-
-func (x *GetGroupMemberListResp) Format() any {
-	if len(x.Members) > 50 {
-		return fmt.Sprintf("len is %v", len(x.Members))
-	}
-	return x
-}
-
-func (x *GetUserReqApplicationListResp) Format() any {
-	if len(x.GroupRequests) > 20 {
-		return fmt.Sprintf("len is %v", len(x.GroupRequests))
-	}
-	return x
 }

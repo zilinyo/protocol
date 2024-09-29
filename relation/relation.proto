@@ -13,12 +13,12 @@
 // limitations under the License.
 
 syntax = "proto3";
-package openim.relation;
+package OpenIMServer.relation;
 
 import "sdkws/sdkws.proto";
 import "wrapperspb/wrapperspb.proto";
 
-option go_package = "github.com/zilinyo/protocol/relation";
+option go_package = "github.com/openimsdk/protocol/relation";
 
 message getPaginationFriendsReq {
   openim.sdkws.RequestPagination pagination = 1;
@@ -84,8 +84,9 @@ message getIncrementalFriendsApplyToResp {
   uint64 version = 1;
   string versionID = 2;
   bool full = 3;
-  repeated string deleteUserIds = 4;
-  repeated openim.sdkws.FriendRequest changes = 5;
+  uint32 syncCount = 4;
+  repeated string deleteUserIds = 5;
+  repeated openim.sdkws.FriendRequest changes = 6;
 }
 
 message getIncrementalFriendsApplyFromReq {
@@ -97,8 +98,9 @@ message getIncrementalFriendsApplyFromResp {
   uint64 version = 1;
   string versionID = 2;
   bool full = 3;
-  repeated string deleteUserIds = 4;
-  repeated openim.sdkws.FriendRequest changes = 5;
+  uint32 syncCount = 4;
+  repeated string deleteUserIds = 5;
+  repeated openim.sdkws.FriendRequest changes = 6;
 }
 
 message getDesignatedFriendsReq {
@@ -162,7 +164,6 @@ message respondFriendApplyReq {
   int32 handleResult = 3;
   string handleMsg = 4;
 }
-
 message respondFriendApplyResp {}
 
 message updateFriendsReq {
@@ -213,6 +214,17 @@ message getSpecifiedFriendsInfoResp {
   repeated getSpecifiedFriendsInfoInfo infos = 1;
 }
 
+message searchFriendsReq {
+  string userID = 1;
+  string keyword = 2;
+  openim.sdkws.RequestPagination pagination = 3;
+}
+
+message searchFriendsResp {
+  int64 total = 1;
+  repeated friendInfo friends = 2;
+}
+
 message getIncrementalFriendsReq {
   string userID = 1;
   string versionID = 2;
@@ -223,10 +235,28 @@ message getIncrementalFriendsResp {
   uint64 version = 1;
   string versionID = 2;
   bool full = 3;
-  repeated string delete = 4;
-  repeated openim.sdkws.FriendInfo insert = 5;
-  repeated openim.sdkws.FriendInfo update = 6;
-  uint64 sortVersion = 7;
+  uint32 syncCount = 4;
+  repeated string deleteUserIds = 5;
+  repeated friendInfo changes = 6;
+}
+
+message notificationUserInfoUpdateReq {
+  string userID = 1;
+  openim.sdkws.UserInfo oldUserInfo = 2;
+  openim.sdkws.UserInfo newUserInfo = 3;
+}
+
+message notificationUserInfoUpdateResp {}
+
+message blackInfo {
+  string ownerUserID = 1;
+  string blackUserID = 2;
+  string blackNickname = 3;
+  string blackFaceURL = 4;
+  int64 createTime = 5;
+  int32 addSource = 6;
+  string operatorUserID = 7;
+  string ex = 8;
 }
 
 message getIncrementalBlacksReq {
@@ -238,40 +268,10 @@ message getIncrementalBlacksResp {
   uint64 version = 1;
   string versionID = 2;
   bool full = 3;
-  repeated string delete = 4;
-  repeated openim.sdkws.BlackInfo insert = 5;
-  repeated openim.sdkws.BlackInfo update = 6;
+  uint32 syncCount = 4;
+  repeated string deleteUserIds = 5;
+  repeated blackInfo changes = 6;
 }
-
-message GetSpecifiedBlacksReq {
-  string ownerUserID = 1;
-  repeated string userIDList = 2;
-}
-
-message GetSpecifiedBlacksResp {
-  repeated openim.sdkws.BlackInfo blacks = 1;
-  int32 total = 2;
-}
-
-message getFullFriendUserIDsReq {
-  uint64 idHash = 1;
-  string userID = 2;
-}
-
-message getFullFriendUserIDsResp {
-  uint64 version = 1;
-  string versionID = 2;
-  bool equal = 3;
-  repeated string userIDs = 4;
-}
-
-message notificationUserInfoUpdateReq {
-  string userID = 1;
-  openim.sdkws.UserInfo oldUserInfo = 2;
-  openim.sdkws.UserInfo newUserInfo = 3;
-}
-
-message notificationUserInfoUpdateResp {}
 
 service friend {
   // Friend request
@@ -283,9 +283,9 @@ service friend {
   // Get specified friend request
   rpc getDesignatedFriendsApply(getDesignatedFriendsApplyReq) returns (getDesignatedFriendsApplyResp);
   // Get Incremental friends apply to list
-  rpc getIncrementalFriendsApplyTo(getIncrementalFriendsApplyToReq) returns (getIncrementalFriendsApplyToResp);
+  rpc getIncrementalFriendsApplyTo(getIncrementalFriendsApplyToReq) returns(getIncrementalFriendsApplyToResp);
   // Get Incremental friends apply from list
-  rpc getIncrementalFriendsApplyFrom(getIncrementalFriendsApplyFromReq) returns (getIncrementalFriendsApplyFromResp);
+  rpc getIncrementalFriendsApplyFrom(getIncrementalFriendsApplyFromReq) returns(getIncrementalFriendsApplyFromResp);
   // Add black user
   rpc addBlack(addBlackReq) returns (addBlackResp);
   // Remove black user
@@ -296,8 +296,6 @@ service friend {
   rpc isBlack(isBlackReq) returns (isBlackResp);
   // Get blacklist
   rpc getPaginationBlacks(getPaginationBlacksReq) returns (getPaginationBlacksResp);
-  // Get specified blacklist
-  rpc GetSpecifiedBlacks(GetSpecifiedBlacksReq) returns (GetSpecifiedBlacksResp);
   // Delete friend
   rpc deleteFriend(deleteFriendReq) returns (deleteFriendResp);
   // Respond to friend request (Accept or Decline)
@@ -316,12 +314,12 @@ service friend {
   rpc getFriendIDs(getFriendIDsReq) returns (getFriendIDsResp);
   // Get specified friends info
   rpc GetSpecifiedFriendsInfo(getSpecifiedFriendsInfoReq) returns (getSpecifiedFriendsInfoResp);
+  // Search for specific friends using keyword
+  rpc searchFriends(searchFriendsReq) returns (searchFriendsResp);
 
+  rpc notificationUserInfoUpdate(notificationUserInfoUpdateReq) returns (notificationUserInfoUpdateResp);
+  // Get Incremental friends list
   rpc getIncrementalFriends(getIncrementalFriendsReq) returns (getIncrementalFriendsResp);
   // Get Incremental blackslist
   rpc getIncrementalBlacks(getIncrementalBlacksReq) returns (getIncrementalBlacksResp);
-  // Get full friend userIDs
-  rpc getFullFriendUserIDs(getFullFriendUserIDsReq) returns (getFullFriendUserIDsResp);
-
-  rpc NotificationUserInfoUpdate(notificationUserInfoUpdateReq) returns (notificationUserInfoUpdateResp);
 }

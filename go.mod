@@ -1,4 +1,4 @@
-module github.com/zilinyo/protocol
+module github.com/openimsdk/protocol
 
 go 1.18
 

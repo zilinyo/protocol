@@ -16,10 +16,7 @@ package user
 
 import (
 	"errors"
-	"fmt"
-
-	"github.com/zilinyo/protocol/constant"
-	"github.com/zilinyo/protocol/util/datautil"
+	"github.com/openimsdk/protocol/constant"
 )
 
 func (x *GetAllUserIDReq) Check() error {
@@ -143,19 +140,11 @@ func (x *GetPaginationUsersReq) Check() error {
 
 func (x *UserRegisterReq) Check() error {
 	if x.Users == nil {
-		return errors.New("users are empty")
-	}
-	for _, u := range x.Users {
-		switch {
-		case u == nil:
-			return errors.New("user is empty")
-		case !datautil.IsLegalUserID(u.UserID):
-			return errors.New("userID is legal")
-		}
+		return errors.New("Users are empty")
 	}
 	for _, u := range x.Users {
 		if u.Nickname == "" {
-			return errors.New("user name is empty")
+			return errors.New("User name is empty")
 		}
 	}
 
@@ -199,7 +188,7 @@ func (x *GetUserStatusReq) Check() error {
 	if x.UserIDs == nil {
 		return errors.New("user-list is empty")
 	}
-	if len(x.UserIDs) > constant.ParamMaxLength {
+	if len(x.UserIDs) > constant.MaxUsersStatusList {
 		return errors.New("user-list is Limit Exceeded")
 	}
 	return nil
@@ -268,7 +257,7 @@ func (x *AddNotificationAccountReq) Check() error {
 		return errors.New("nickName is empty")
 	}
 	if x.FaceURL == "" {
-		return errors.New("faceURL is empty")
+		return errors.New("nickName is empty")
 	}
 	return nil
 }
@@ -292,11 +281,4 @@ func (x *SearchNotificationAccountReq) Check() error {
 		return errors.New("pageNumber is invalid")
 	}
 	return nil
-}
-
-func (x *GetDesignateUsersResp) Format() any {
-	if len(x.UsersInfo) > 20 {
-		return fmt.Sprintf("len is %v", len(x.UsersInfo))
-	}
-	return x
 }
