@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package agents;
+option go_package = "github.com/zilinyo/protocol/agents;agents";
+
+// 定义请求和返回参数的消息类型
+message CreateAgentRequest {
+  string name = 1;
+  string email = 2;
+}
+
+message CreateAgentResponse {
+  int32 agent_id = 1;
+  string name = 2;
+  string email = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+message GetAgentRequest {
+  int32 agent_id = 1;
+}
+
+message GetAgentResponse {
+  int32 agent_id = 1;
+  string name = 2;
+  string email = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+// 定义服务
+service AgentService {
+  rpc CreateAgent(CreateAgentRequest) returns (CreateAgentResponse);
+  rpc GetAgent(GetAgentRequest) returns (GetAgentResponse);
+}
