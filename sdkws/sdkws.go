@@ -16,7 +16,6 @@ package sdkws
 
 import (
 	"errors"
-	"fmt"
 )
 
 func (x *MsgData) Check() error {
@@ -40,14 +39,4 @@ func (x *RequestPagination) Check() error {
 		return errors.New("showNumber is invalid")
 	}
 	return nil
-}
-
-func (x *GetMaxSeqResp) Format() any {
-	if len(x.MaxSeqs) > 50 {
-		return fmt.Sprintf("len is %v", len(x.MaxSeqs))
-	}
-	if len(x.MinSeqs) > 50 {
-		return fmt.Sprintf("len is %v", len(x.MinSeqs))
-	}
-	return x
 }

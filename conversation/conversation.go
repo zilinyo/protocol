@@ -16,8 +16,6 @@ package conversation
 
 import (
 	"errors"
-	"fmt"
-
 	"github.com/zilinyo/protocol/constant"
 )
 
@@ -188,32 +186,4 @@ func (x *GetSortedConversationListReq) Check() error {
 	}
 
 	return nil
-}
-
-func (x *GetConversationIDsResp) Format() any {
-	if len(x.ConversationIDs) > 50 {
-		return fmt.Sprintf("len is %v", len(x.ConversationIDs))
-	}
-	return x
-}
-
-func (x *GetOwnerConversationResp) Format() any {
-	if x.Total > 50 {
-		return fmt.Sprintf("len is %v", x.Total)
-	}
-	return x
-}
-
-func (x *GetAllConversationsResp) Format() any {
-	if len(x.Conversations) > 50 {
-		return fmt.Sprintf("len is %v", len(x.Conversations))
-	}
-	return x
-}
-
-func (x *GetFullOwnerConversationIDsResp) Format() any {
-	if len(x.ConversationIDs) > 20 {
-		return fmt.Sprintf("len is %v", len(x.ConversationIDs))
-	}
-	return x
 }

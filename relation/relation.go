@@ -14,10 +14,7 @@
 
 package relation
 
-import (
-	"errors"
-	"fmt"
-)
+import "errors"
 
 func (x *GetPaginationFriendsReq) Check() error {
 	if x.Pagination == nil {
@@ -203,31 +200,4 @@ func (x *GetSpecifiedFriendsInfoReq) Check() error {
 		return errors.New("userIDList is empty")
 	}
 	return nil
-}
-func (x *GetFullFriendUserIDsReq) Check() error {
-	if len(x.UserID) == 0 {
-		return errors.New("userID is empty")
-	}
-	return nil
-}
-
-func (x *GetPaginationFriendsApplyToResp) Format() any {
-	if x.Total > 20 {
-		return fmt.Sprintf("len is %v", x.Total)
-	}
-	return x
-}
-
-func (x *GetPaginationFriendsApplyFromResp) Format() any {
-	if x.Total > 20 {
-		return fmt.Sprintf("len is %v", x.Total)
-	}
-	return x
-}
-
-func (x *GetPaginationFriendsResp) Format() any {
-	if len(x.FriendsInfo) > 20 {
-		return fmt.Sprintf("len is %v", len(x.FriendsInfo))
-	}
-	return x
 }

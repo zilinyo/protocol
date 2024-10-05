@@ -16,13 +16,13 @@ package group
 
 import (
 	"errors"
-	"fmt"
+	"github.com/zilinyo/protocol/constant"
 )
 
 func (x *CreateGroupReq) Check() error {
-	//if x.MemberUserIDs == nil && x.AdminUserIDs == nil {
-	//	return errors.New("memberUserIDS and adminUserIDs are empty")
-	//}
+	if x.MemberUserIDs == nil && x.AdminUserIDs == nil {
+		return errors.New("memberUserIDS and adminUserIDs are empty")
+	}
 	if x.GroupInfo == nil {
 		return errors.New("groupInfo is empty")
 	}
@@ -357,56 +357,22 @@ func (x *GroupCreateCountReq) Check() error {
 	}
 	return nil
 }
-func (x *GetFullGroupMemberUserIDsReq) Check() error {
-	if len(x.GroupID) == 0 {
+
+func (x *SearchGroupMemberReq) Check() error {
+	if x.GroupID == "" {
 		return errors.New("groupID is empty")
 	}
-	return nil
-}
-func (x *GetFullJoinGroupIDsReq) Check() error {
-	if len(x.UserID) == 0 {
-		return errors.New("userID is empty")
+	if x.Keyword == "" {
+		return errors.New("keyword is empty")
+	}
+	switch x.Position {
+	case constant.GroupSearchPositionHead:
+	case constant.GroupSearchPositionAny:
+	default:
+		return errors.New("position is invalid")
+	}
+	if err := x.Pagination.Check(); err != nil {
+		return err
 	}
 	return nil
-}
-
-func (x *BatchGetIncrementalGroupMemberResp) Format() any {
-	if len(x.RespList) > 50 {
-		return fmt.Sprintf("len is %v", len(x.RespList))
-	}
-	return x
-}
-
-func (x *GetGroupApplicationListResp) Format() any {
-	if len(x.GroupRequests) > 50 {
-		return fmt.Sprintf("len is %v", len(x.GroupRequests))
-	}
-	return x
-}
-func (x *GetJoinedGroupListResp) Format() any {
-	if len(x.Groups) > 20 {
-		return fmt.Sprintf("len is %v", len(x.Groups))
-	}
-	return x
-}
-
-func (x *GetGroupsInfoResp) Format() any {
-	if len(x.GroupInfos) > 20 {
-		return fmt.Sprintf("len is %v", len(x.GroupInfos))
-	}
-	return x
-}
-
-func (x *GetGroupMemberListResp) Format() any {
-	if len(x.Members) > 50 {
-		return fmt.Sprintf("len is %v", len(x.Members))
-	}
-	return x
-}
-
-func (x *GetUserReqApplicationListResp) Format() any {
-	if len(x.GroupRequests) > 20 {
-		return fmt.Sprintf("len is %v", len(x.GroupRequests))
-	}
-	return x
 }
