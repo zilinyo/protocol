@@ -68,8 +68,6 @@ const (
 	UserCommandDeleteNotification = 1306
 	UserCommandUpdateNotification = 1307
 
-	UserSubscribeOnlineStatusNotification = 1308
-
 	UserNotificationEnd = 1399
 	OANotification      = 1400
 
@@ -107,14 +105,15 @@ const (
 
 	ConversationPrivateChatNotification = 1701
 	ConversationUnreadNotification      = 1702
-	ClearConversationNotification       = 1703
+
+	MsgRevokeNotification = 2101
 
 	BusinessNotificationBegin = 2000
 	BusinessNotification      = 2001
 	BusinessNotificationEnd   = 2099
 
-	MsgRevokeNotification  = 2101
-	DeleteMsgsNotification = 2102
+	ClearConversationNotification = 2101
+	DeleteMsgsNotification        = 2102
 
 	HasReadReceipt = 2200
 
@@ -154,16 +153,13 @@ const (
 	// The PC terminal can be online at the same time,but other terminal only one of the endpoints can login.
 	PCAndOther = 5
 
-	// OnlineStatus  = "online"
-	// OfflineStatus = "offline"
-	// Registered    = "registered"
-	// UnRegistered  = "unregistered"
+	OnlineStatus  = "online"
+	OfflineStatus = "offline"
+	Registered    = "registered"
+	UnRegistered  = "unregistered"
 
 	Online  = 1
 	Offline = 0
-
-	Registered   = 1
-	UnRegistered = 0
 
 	// MsgReceiveOpt.
 	ReceiveMessage          = 0

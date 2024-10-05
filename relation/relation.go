@@ -14,11 +14,7 @@
 
 package relation
 
-import (
-	"errors"
-	"fmt"
-	"github.com/zilinyo/protocol/constant"
-)
+import "errors"
 
 func (x *GetPaginationFriendsReq) Check() error {
 	if x.Pagination == nil {
@@ -50,10 +46,6 @@ func (x *ImportFriendReq) Check() error {
 	if x.FriendUserIDs == nil {
 		return errors.New("friendUserIDS is empty")
 	}
-
-	if len(x.FriendUserIDs) > constant.ParamMaxLength {
-		return errors.New("too many FriendUserIDs, need to be less than 1000")
-	}
 	return nil
 }
 
@@ -77,10 +69,6 @@ func (x *GetDesignatedFriendsReq) Check() error {
 	if x.FriendUserIDs == nil {
 		return errors.New("friendUserIDS is empty")
 	}
-
-	// if len(x.FriendUserIDs) > 1000 {
-	// 	return errors.New("too many FriendUserIDs, need to be less than 1000")
-	// }
 	return nil
 }
 
@@ -202,10 +190,6 @@ func (x *UpdateFriendsReq) Check() error {
 	if x.FriendUserIDs == nil {
 		return errors.New("friendUserIDs is empty")
 	}
-
-	if len(x.FriendUserIDs) > constant.ParamMaxLength {
-		return errors.New("too many FriendUserIDs, need to be less than 1000")
-	}
 	return nil
 }
 func (x *GetSpecifiedFriendsInfoReq) Check() error {
@@ -215,36 +199,5 @@ func (x *GetSpecifiedFriendsInfoReq) Check() error {
 	if x.UserIDList == nil {
 		return errors.New("userIDList is empty")
 	}
-
-	if len(x.UserIDList) > constant.ParamMaxLength {
-		return errors.New("too many UserIDs, need to be less than 1000")
-	}
 	return nil
-}
-func (x *GetFullFriendUserIDsReq) Check() error {
-	if len(x.UserID) == 0 {
-		return errors.New("userID is empty")
-	}
-	return nil
-}
-
-func (x *GetPaginationFriendsApplyToResp) Format() any {
-	if x.Total > 20 {
-		return fmt.Sprintf("len is %v", x.Total)
-	}
-	return x
-}
-
-func (x *GetPaginationFriendsApplyFromResp) Format() any {
-	if x.Total > 20 {
-		return fmt.Sprintf("len is %v", x.Total)
-	}
-	return x
-}
-
-func (x *GetPaginationFriendsResp) Format() any {
-	if len(x.FriendsInfo) > 20 {
-		return fmt.Sprintf("len is %v", len(x.FriendsInfo))
-	}
-	return x
 }

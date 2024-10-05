@@ -20,7 +20,3 @@ const (
 	MaxNotificationNum     = 500
 	MaxUsersStatusList     = 500
 )
-
-const (
-	ParamMaxLength = 1000
-)
