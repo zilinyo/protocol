@@ -13,24 +13,27 @@
 # limitations under the License.
 
 PROTO_NAMES=(
-    "auth"
-    "conversation"
-    "errinfo"
-    "relation"
-    "group"
-    "msg"
-    "msggateway"
-    "push"
-    "rtc"
-    "sdkws"
-    "third"
-    "user"
-    "statistics"
-    "wrapperspb"
+#    "auth"
+#    "conversation"
+#    "errinfo"
+#    "relation"
+#    "group"
+#    "msg"
+#    "msggateway"
+#    "push"
+#    "rtc"
+#    "sdkws"
+#    "third"
+#    "user"
+#    "statistics"
+#    "wrapperspb"
+    "agents"
 )
 
 for name in "${PROTO_NAMES[@]}"; do
-  protoc --go_out=plugins=grpc:./${name} --go_opt=module=github.com/zilinyo/protocol/${name} ${name}/${name}.proto
+#  protoc --go_out=plugins=grpc:./${name} --go_opt=module=github.com/zilinyo/protocol/${name} ${name}/${name}.proto
+   protoc --go_out=./${name} --go_opt=module=github.com/zilinyo/protocol/${name} --go-grpc_out=./${name} --go-grpc_opt=module=github.com/zilinyo/protocol/${name}  ./${name}/${name}.proto
+
   if [ $? -ne 0 ]; then
       echo "error processing ${name}.proto"
       exit $?
